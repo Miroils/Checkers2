@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class Board : MonoBehaviour
 {
@@ -13,5 +14,10 @@ public class Board : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TestMetod()
+    {
+        Debug.Log("ASDASDASDSD");
     }
 }
