@@ -12,13 +12,13 @@ public class BoardDataGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("СТАРТУЕМ");
         GenerateBoard();//03 08 из старт убрать
     }
 
     void GenerateBoard()
     {
         BoardData boardData = new BoardData(HORIZONTAL_CELLS, VERTICAL_CELLS);
+        _board.SetBoardData(boardData);
         //03 08 передать в Board
         //Board board = Instantiate(boardData);
         EventManager.BoardIsGeneratedEvent?.Invoke();
@@ -28,7 +28,6 @@ public class BoardDataGenerator : MonoBehaviour
     [Inject]
     private void Construct(Board board)
     {
-        Debug.Log("СРАБОТАЛА");
         _board = board;
         board.TestMetod();
     }

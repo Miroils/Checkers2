@@ -3,7 +3,7 @@ using Zenject;
 
 public class Board : MonoBehaviour
 {
-    BoardData _boardData;
+    private BoardData _boardData;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +18,16 @@ public class Board : MonoBehaviour
 
     public void TestMetod()
     {
-        Debug.Log("ASDASDASDSD");
+        
+    }
+
+    public void SetBoardData(BoardData boardData)
+    {
+        _boardData = boardData;
+    }
+
+    public BoardData GetBoardData()
+    {
+        return _boardData;
     }
 }

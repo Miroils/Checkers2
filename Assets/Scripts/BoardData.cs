@@ -4,7 +4,7 @@ public class BoardData
 {
     private int _horizontalCells;
     private int _verticalCells;
-    Cell[,] cells;
+    private Cell[,] _cells;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public BoardData (int horizontalCells, int verticalCells)
     {
@@ -16,7 +16,7 @@ public class BoardData
 
     private void CellsInit()
     {
-        cells = new Cell[_horizontalCells, _verticalCells];
+        _cells = new Cell[_horizontalCells, _verticalCells];
         
         CreatingBlackWhiteCells();
         
@@ -28,22 +28,27 @@ public class BoardData
         {
             for (int j = 0; j < _horizontalCells; j++)
             {
-                cells[i, j] = new Cell();
+                _cells[i, j] = new Cell();
                 if (i % 2 == 0)
                 {
                     if (j % 2 == 0)
                     {
-                        cells[i, j].SetCellColor(CellColorEnum.blackCell);
+                        _cells[i, j].SetCellColor(CellColorEnum.blackCell);
                     }
                 }
                 else
                 {
                     if (j % 2 == 1)
                     {
-                        cells[i, j].SetCellColor(CellColorEnum.blackCell);
+                        _cells[i, j].SetCellColor(CellColorEnum.blackCell);
                     }
                 }
             }
         }
+    }
+
+    public Cell[,] GetCellsParametrs()
+    {
+        return _cells;
     }
 }
