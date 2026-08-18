@@ -16,11 +16,6 @@ public class Board : MonoBehaviour
         
     }
 
-    public void TestMetod()
-    {
-        
-    }
-
     public void SetBoardData(BoardData boardData)
     {
         _boardData = boardData;

@@ -19,7 +19,6 @@ public class BoardVisualiser : MonoBehaviour
     private void Construct(Board board)
     {
         _board = board;
-        board.TestMetod();
     }
 
     private void VisualiseBoard()
