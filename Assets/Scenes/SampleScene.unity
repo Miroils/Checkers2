@@ -438,7 +438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 762790517}
   m_Layer: 0
-  m_Name: CellStart
+  m_Name: CellsStartPostion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -547,7 +547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccc40fde8ff459f41ae6c91259ba7126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardVisualiser
-  _boardTilePrefab: {fileID: 2159717952406446804, guid: 389c937f5124d044987422a744d21560, type: 3}
+  _boardCellPrefab: {fileID: 2159717952406446804, guid: 389c937f5124d044987422a744d21560, type: 3}
+  _checkerPrefab: {fileID: 7585801799896140668, guid: 68da22a9aea8f2a479fef5ee8619e1d7, type: 3}
   _startPositionForSell: {fileID: 762790516}
 --- !u!1 &1996310906
 GameObject:

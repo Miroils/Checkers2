@@ -14,7 +14,6 @@ public class BoardDataGenerator : MonoBehaviour
     void Start()
     {
         GenerateBoard();//03 08 из старт убрать
-        GenerateCheckers();
     }
 
     void GenerateBoard()
@@ -25,17 +24,10 @@ public class BoardDataGenerator : MonoBehaviour
         //Board board = Instantiate(boardData);
         EventManager.BoardIsGeneratedEvent?.Invoke();
     }
-
     
     [Inject]
     private void Construct(Board board)
     {
         _board = board;
-    }
-    
-
-    void GenerateCheckers()
-    {
-
     }
 }

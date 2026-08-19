@@ -103,4 +103,13 @@ public class BoardData
     {
         return _cells;
     }
+
+    public List<Checker> GetCheckersList(CheckerColorEnum checkerColorEnum)
+    {
+        if (checkerColorEnum == CheckerColorEnum.redChecker)
+        {
+            return redCheckers;
+        }
+        return greenCheckers;
+    }
 }

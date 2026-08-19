@@ -15,4 +15,24 @@ public class Checker
     {
         _isQueen = true;
     }
+
+    public bool IsQueen()
+    {
+        return _isQueen;
+    }
+
+    public CheckerColorEnum GetCheckerColor()
+    {
+        return _checkerColor;
+    }
+
+    public int GetVerticalPosition()
+    {
+        return _verticalPosition;
+    }
+
+    public int GetHorizontalPosition()
+    {
+        return _horizontalPosition;
+    }
 }
