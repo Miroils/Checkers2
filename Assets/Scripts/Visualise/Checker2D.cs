@@ -54,4 +54,9 @@ public class Checker2D : MonoBehaviour
     {
         _CheckerSprite.color = _greenChecker;
     }
+
+    private void TransitToNewPostion()
+    {
+
+    }
 }

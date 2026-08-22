@@ -35,4 +35,15 @@ public class Checker
     {
         return _horizontalPosition;
     }
+
+    public void  MoveToNewPosition(int newVerticalPostion, int newHorizontalPostion)
+    {
+        EventsManager.ClearingCellEvent?.Invoke(_verticalPosition, _horizontalPosition);
+        _verticalPosition = newVerticalPostion;
+        _horizontalPosition = newHorizontalPostion;
+        EventsManager.TransitCheckerEvent?.Invoke(this);
+        //20 08 занятие новой клетки
+        //21 08 нужно обоновить параметры Cell
+        //21 08 нужно визуализировать перемещение
+    }
 }

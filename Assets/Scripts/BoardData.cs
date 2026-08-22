@@ -26,7 +26,7 @@ public class BoardData
     private void CellsInit()
     {
         //18 08 объеденить методы?
-        _cells = new Cell[_horizontalCells, _verticalCells];        
+        _cells = new Cell[_verticalCells, _horizontalCells];
         CreatingBlackWhiteCells();        
     }
 
@@ -81,6 +81,7 @@ public class BoardData
             for (int j = 0; j < _horizontalCells; j++)
             {
                 _cells[i, j] = new Cell();
+                _cells[i, j].SetCellPostion(i, j);
                 if (i % 2 == 0)
                 {
                     if (j % 2 == 0)
@@ -111,5 +112,16 @@ public class BoardData
             return redCheckers;
         }
         return greenCheckers;
+    }
+
+    public void ClearCell(int verticalPostion, int horizontalPostion)
+    {
+        Debug.Log("CLEARING");
+        _cells[verticalPostion, horizontalPostion].RemoveCheckerFromCell();
+    }
+
+    public void SetCheckerOnCell(Checker checker)
+    {
+        _cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
     }
 }

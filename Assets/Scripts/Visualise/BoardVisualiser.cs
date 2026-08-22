@@ -17,10 +17,16 @@ public class BoardVisualiser : MonoBehaviour
     private Cell2D[,] _cells2d;
     private int _horizontalCells;
     private int _verticalCells;
+    private List<Checker> _redCheckersList;
+    private List<Checker> _greenCheckersList;
+    private Dictionary<Checker,Checker2D> _checkers2Dictionary;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {        
-        EventManager.BoardIsGeneratedEvent.AddListener(VisualiseBoard);   
+        EventsManager.BoardIsGeneratedEvent.AddListener(VisualiseBoard);   
+        EventsManager.UnchouseAllCellsEvent.AddListener(UnchosedAllCells);   
+        EventsManager.AnimateCheckerTranstion.AddListener(TransitChecker);   
     }
 
     [Inject]
@@ -55,10 +61,12 @@ public class BoardVisualiser : MonoBehaviour
                 //test Cell2D cell = Instantiate(_boardTilePrefab, cellFinalPositon, Quaternion.identity, _startPositionForSell.transform);
                 Cell2D cell2D = Instantiate(_boardCellPrefab, _startPositionForSell.transform);
                 cell2D.transform.localPosition = cellFinalPositon;
+                cell2D.Initialization(_cells[i, j]);
                 //17 08 тут запрос, а создание в другом скрипте?
                 //17 08 пока прям тут создаем
                 cell2D.Coloring(_cells[i, j].GetCellColor());
                 _cells2d[i,j] = cell2D;
+                _cells2d[i, j].name = "Cell2D" + i + j;
             }
             cellPostionX = 0f;
             cellPostionY += DELTA_POSITION_FOR_CELL;
@@ -66,28 +74,53 @@ public class BoardVisualiser : MonoBehaviour
     }
     private void VisualiseCheckers()
     {
-        List<Checker> redCheckersList = _boardData.GetCheckersList(CheckerColorEnum.redChecker);        
-        List<Checker> greenCheckersList = _boardData.GetCheckersList(CheckerColorEnum.greenChecker);    
-        
-        
-        foreach (Checker checker in redCheckersList)
-        {            
-            int verticalPostion = checker.GetVerticalPosition();
-            int horizontalPostion = checker.GetHorizontalPosition();
-            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[verticalPostion, horizontalPostion].transform);
-            checker2D.Initialization(checker);
-        }
+        _redCheckersList = _boardData.GetCheckersList(CheckerColorEnum.redChecker);        
+        _greenCheckersList = _boardData.GetCheckersList(CheckerColorEnum.greenChecker);
+        _checkers2Dictionary = new Dictionary<Checker, Checker2D>();
 
-        foreach (Checker checker in greenCheckersList)
+        int checkerCounter = 0;
+        foreach (Checker checker in _redCheckersList)
         {
             int verticalPostion = checker.GetVerticalPosition();
             int horizontalPostion = checker.GetHorizontalPosition();
             Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[verticalPostion, horizontalPostion].transform);
             checker2D.Initialization(checker);
+            _checkers2Dictionary.Add(checker, checker2D);
+            checker2D.name = "Red" + checkerCounter;
+            checkerCounter++;
         }
 
-        //пробегаемся по списку
-        //генерируем шашку (по хорошему конструктор задействовать)
-        //выставляем в позиции соотвествующей ячейки, номер ячейки в данных чекер
+        checkerCounter = 0;
+        foreach (Checker checker in _greenCheckersList)
+        {
+            int verticalPostion = checker.GetVerticalPosition();
+            int horizontalPostion = checker.GetHorizontalPosition();
+            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[verticalPostion, horizontalPostion].transform);
+            checker2D.Initialization(checker);
+            _checkers2Dictionary.Add(checker, checker2D);
+            checker2D.name = "Green" + checkerCounter;
+            checkerCounter++;
+        }
+    }
+
+    private void UnchosedAllCells()
+    {
+        foreach (Cell2D cell2d in _cells2d)
+        {
+            cell2d.UnchouseCell();
+        }
+    }
+
+    private void TransitChecker(Checker checker)
+    {
+        Debug.Log(_checkers2Dictionary[checker].name);
+        _checkers2Dictionary[checker].transform.position = _cells2d[checker.GetVerticalPosition(),checker.GetHorizontalPosition()].transform.position + new Vector3 (0,0,-1);
+        //21 08 магический вектор, чтобы фишка была перед полем
+
+        //21 08 берем из checker позицию (уже новая), передаем инфу в клетку (по идее такой мув должен быть не в Visualiser
+        //берем соотвествующим 2Дчекер и его двигаем
+        //но как тут понять что он соотвествующий?
+        //или передавать уже чекер2д?, ну хотелось бы развязаться от визиализации
+        //21 08 _cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
     }
 }

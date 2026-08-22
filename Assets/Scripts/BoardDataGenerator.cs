@@ -22,7 +22,7 @@ public class BoardDataGenerator : MonoBehaviour
         _board.SetBoardData(boardData);
         //03 08 передать в Board
         //Board board = Instantiate(boardData);
-        EventManager.BoardIsGeneratedEvent?.Invoke();
+        EventsManager.BoardIsGeneratedEvent?.Invoke();
     }
     
     [Inject]
