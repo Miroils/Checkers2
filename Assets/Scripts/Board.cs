@@ -10,6 +10,10 @@ public class Board : MonoBehaviour
     {
         EventsManager.ClearingCellEvent.AddListener(ClearingCell);
         EventsManager.TransitCheckerEvent.AddListener(TransitChecker);
+        EventsManager.ResetCellsMoveableEvent.AddListener(ResetAllCellMoveable);
+        EventsManager.ResetCellsPurifyEvent.AddListener(ResetAllCellsPurify);
+        EventsManager.CellPurifyEvent.AddListener(CellPurify);
+        EventsManager.DestroyCheckerEvent.AddListener(DestroyChecker);
     }
 
     // Update is called once per frame
@@ -38,6 +42,31 @@ public class Board : MonoBehaviour
     {
         //21 08 немного перегружено?
         _boardData.SetCheckerOnCell(checker);    
-        EventsManager.AnimateCheckerTranstion?.Invoke(checker);
+        EventsManager.AnimateCheckerTranstionEvent?.Invoke(checker);
+    }
+
+    public Cell GetCellData(int verticalPostion, int horizontalPostion)
+    {
+        return _boardData.GetAnCellParametrs(verticalPostion, horizontalPostion);
+    }
+
+    private void ResetAllCellMoveable()
+    {
+        _boardData.ResetAllCellMoveable();
+    }
+
+    private void ResetAllCellsPurify()
+    {
+        _boardData.ResetAllCellPurify();
+    }
+
+    private void CellPurify(Cell cell)
+    {
+        cell.PurifyCell();
+    }
+
+    private void DestroyChecker(Checker checker)
+    {
+        _boardData.DestroyChecker(checker);
     }
 }

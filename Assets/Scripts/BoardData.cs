@@ -9,8 +9,8 @@ public class BoardData
     private int _verticalCells;
     private int _checkersAmount;//18 08 Сейчас заданное количество значения, создается исходя из размеров поля, в 3 ряда
     private Cell[,] _cells;
-    private List<Checker> redCheckers;
-    private List<Checker> greenCheckers;
+    private List<Checker> _redCheckers;
+    private List<Checker> _greenCheckers;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public BoardData (int horizontalCells, int verticalCells, int checkersAmount)
@@ -39,8 +39,8 @@ public class BoardData
 
     private void ResetCheckersLists()
     {
-        redCheckers = new List<Checker>();
-        greenCheckers = new List<Checker>();        
+        _redCheckers = new List<Checker>();
+        _greenCheckers = new List<Checker>();        
     }
 
     private void CreateGreenCheckers()
@@ -52,7 +52,7 @@ public class BoardData
                 if (_cells[i,j].GetCellColor() == CellColorEnum.blackCell)
                 {
                     Checker newChecker = new Checker(CheckerColorEnum.greenChecker, i, j);
-                    greenCheckers.Add(newChecker);//18 08 повторяемость с red?
+                    _greenCheckers.Add(newChecker);//18 08 повторяемость с red?
                     _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с red?
                 }
             }
@@ -67,7 +67,7 @@ public class BoardData
                 if (_cells[i, j].GetCellColor() == CellColorEnum.blackCell)
                 {
                     Checker newChecker = new Checker(CheckerColorEnum.redChecker, i, j);
-                    redCheckers.Add(newChecker);//18 08 повторяемость с green?
+                    _redCheckers.Add(newChecker);//18 08 повторяемость с green?
                     _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с green?
                 }
             }
@@ -105,23 +105,49 @@ public class BoardData
         return _cells;
     }
 
+    public Cell GetAnCellParametrs(int verticalPostion, int horizontalPostion)
+    {
+        return _cells[verticalPostion, horizontalPostion];
+    }
+
     public List<Checker> GetCheckersList(CheckerColorEnum checkerColorEnum)
     {
         if (checkerColorEnum == CheckerColorEnum.redChecker)
         {
-            return redCheckers;
+            return _redCheckers;
         }
-        return greenCheckers;
+        return _greenCheckers;
     }
 
     public void ClearCell(int verticalPostion, int horizontalPostion)
     {
-        Debug.Log("CLEARING");
         _cells[verticalPostion, horizontalPostion].RemoveCheckerFromCell();
     }
 
     public void SetCheckerOnCell(Checker checker)
     {
         _cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
+    }
+
+    public void ResetAllCellMoveable()
+    {
+        foreach (Cell cell in _cells)
+        {
+            cell.ResetMoveable();
+        }
+    }
+    public void ResetAllCellPurify()
+    {
+        foreach (Cell cell in _cells)
+        {
+            cell.ClearPurifyList();
+        }
+    }
+    
+    public void DestroyChecker(Checker checker)
+    {
+        checker.DestroyChecker();
+        _greenCheckers.Remove(checker);
+        _redCheckers.Remove(checker);
     }
 }

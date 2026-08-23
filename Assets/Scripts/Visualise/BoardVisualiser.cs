@@ -26,7 +26,7 @@ public class BoardVisualiser : MonoBehaviour
     {        
         EventsManager.BoardIsGeneratedEvent.AddListener(VisualiseBoard);   
         EventsManager.UnchouseAllCellsEvent.AddListener(UnchosedAllCells);   
-        EventsManager.AnimateCheckerTranstion.AddListener(TransitChecker);   
+        EventsManager.AnimateCheckerTranstionEvent.AddListener(TransitChecker);   
     }
 
     [Inject]
@@ -113,14 +113,7 @@ public class BoardVisualiser : MonoBehaviour
 
     private void TransitChecker(Checker checker)
     {
-        Debug.Log(_checkers2Dictionary[checker].name);
-        _checkers2Dictionary[checker].transform.position = _cells2d[checker.GetVerticalPosition(),checker.GetHorizontalPosition()].transform.position + new Vector3 (0,0,-1);
         //21 08 магический вектор, чтобы фишка была перед полем
-
-        //21 08 берем из checker позицию (уже новая), передаем инфу в клетку (по идее такой мув должен быть не в Visualiser
-        //берем соотвествующим 2Дчекер и его двигаем
-        //но как тут понять что он соотвествующий?
-        //или передавать уже чекер2д?, ну хотелось бы развязаться от визиализации
-        //21 08 _cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
+        _checkers2Dictionary[checker].transform.position = _cells2d[checker.GetVerticalPosition(),checker.GetHorizontalPosition()].transform.position + new Vector3 (0,0,-1);        
     }
 }

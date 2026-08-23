@@ -1,9 +1,14 @@
+
+using System;
+
 public class Checker
 { 
     private CheckerColorEnum _checkerColor;
     private bool _isQueen;
     private int _verticalPosition;//18 08 спорно?
     private int _horizontalPosition;//18 08 спорно?
+
+    public Action CheckerDestroyedAction;
     public Checker(CheckerColorEnum checkerColor, int verticalPosition, int horizontalPosition)
     {
         _checkerColor = checkerColor;
@@ -45,5 +50,10 @@ public class Checker
         //20 08 занятие новой клетки
         //21 08 нужно обоновить параметры Cell
         //21 08 нужно визуализировать перемещение
+    }
+
+    public void DestroyChecker()
+    {        
+        CheckerDestroyedAction?.Invoke();
     }
 }

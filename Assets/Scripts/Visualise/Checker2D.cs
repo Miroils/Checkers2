@@ -23,6 +23,7 @@ public class Checker2D : MonoBehaviour
     public void Initialization(Checker checker)
     {
         _checker = checker;
+        _checker.CheckerDestroyedAction += Checker2DDestroy;
         UpdateCheckerVisual();
     }
 
@@ -58,5 +59,10 @@ public class Checker2D : MonoBehaviour
     private void TransitToNewPostion()
     {
 
+    }
+
+    private void Checker2DDestroy()
+    {
+        Destroy(this.gameObject);
     }
 }
