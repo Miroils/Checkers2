@@ -3,10 +3,6 @@ using Zenject;
 
 public class BoardDataGenerator : MonoBehaviour
 {
-    //18 08 размеры поля и количество шашек пока жестко фиксировано
-    private const int VERTICAL_CELLS = 8;//18 08 пока нельзя меньше 6
-    private const int HORIZONTAL_CELLS = 8;
-    private const int CHECKERS_AMOUNT = 12;//for each color //18 08 пока бесполезный параметр
 
     private Board _board;
 
@@ -18,7 +14,7 @@ public class BoardDataGenerator : MonoBehaviour
 
     void GenerateBoard()
     {
-        BoardData boardData = new BoardData(HORIZONTAL_CELLS, VERTICAL_CELLS, CHECKERS_AMOUNT);
+        BoardData boardData = new BoardData(GlobalGameParametrs.HorizontalCells, GlobalGameParametrs.VerticalCells, GlobalGameParametrs.CheckersAmount);
         _board.SetBoardData(boardData);
         //03 08 передать в Board
         //Board board = Instantiate(boardData);

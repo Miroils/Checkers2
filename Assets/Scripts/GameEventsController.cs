@@ -60,6 +60,10 @@ public class GameEventsController : MonoBehaviour
                 ResetPurifyCellsList();
             }
         }
+        else
+        {
+            ResetMoveAbleCells();
+        }
     }
 
     private void ResetMoveAbleCells()
@@ -96,28 +100,18 @@ public class GameEventsController : MonoBehaviour
                 //22 08 ДВИЖЕНИЕ ВПЕРЕД!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 int cheсkingVerticalPosion = verticalPostion + 1;
                 int cheсkingHorizontalPosion = 0;
-                if (cheсkingVerticalPosion < 8)//22 08 нужно не жестко а брать конст размер поля
+                if (cheсkingVerticalPosion < GlobalGameParametrs.VerticalCells)//22 08 нужно не жестко а брать конст размер поля
                 {
                     cheсkingHorizontalPosion = horizontalPostion - 1;
                     if (cheсkingHorizontalPosion >= 0)
                     {
-                        //22 08 дублирование даже бзе ред
-                        Cell cell = _board.GetCellData(cheсkingVerticalPosion, cheсkingHorizontalPosion);
-                        if (CheckerOnConreteCell(cell) == null)
-                        {
-                            cell.SetMoveable();
-                        }
+                        TryToSetCellMoveable(cheсkingVerticalPosion, cheсkingHorizontalPosion);
                     }
 
                     cheсkingHorizontalPosion = horizontalPostion + 1;
-                    if (cheсkingHorizontalPosion < 8) //22 08 нужно не жестко задавать
+                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells) //22 08 нужно не жестко задавать
                     {
-                        //22 08 дублирование даже бзе ред
-                        Cell cell = _board.GetCellData(cheсkingVerticalPosion, cheсkingHorizontalPosion);
-                        if (CheckerOnConreteCell(cell) == null)
-                        {
-                            cell.SetMoveable();
-                        }
+                        TryToSetCellMoveable(cheсkingVerticalPosion, cheсkingHorizontalPosion);
                     }
                 }
                
@@ -131,21 +125,13 @@ public class GameEventsController : MonoBehaviour
                     int cheсkingHorizontalPosion = horizontalPostion - 1;
                     if (cheсkingHorizontalPosion >= 0)
                     {
-                        Cell cell = _board.GetCellData(cheсkingVerticalPosion, cheсkingHorizontalPosion);
-                        if (CheckerOnConreteCell(cell) == null)
-                        {
-                            cell.SetMoveable();
-                        }
+                        TryToSetCellMoveable(cheсkingVerticalPosion, cheсkingHorizontalPosion);
                     }
 
                     cheсkingHorizontalPosion = horizontalPostion + 1;
-                    if (cheсkingHorizontalPosion < 8) //22 08 нужно не жестко задавать
+                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells) //22 08 нужно не жестко задавать
                     {
-                        Cell cell = _board.GetCellData(cheсkingVerticalPosion, cheсkingHorizontalPosion);
-                        if (CheckerOnConreteCell(cell) == null)
-                        {
-                            cell.SetMoveable();
-                        }
+                        TryToSetCellMoveable(cheсkingVerticalPosion,cheсkingHorizontalPosion);
                     }
                 }
             }
@@ -158,23 +144,32 @@ public class GameEventsController : MonoBehaviour
                 FindAttackMoveForChecker(checker, -1, -1);                    
             }
 
-            if (verticalPostion >= 2 && horizontalPostion < 6)
+            if (verticalPostion >= 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells-2)
             {
                 //право низ
                 FindAttackMoveForChecker(checker, -1, 1);
             }
 
-            if (verticalPostion < 6 && horizontalPostion >= 2)
+            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion >= 2)
             {
                 //лево верх
                 FindAttackMoveForChecker(checker, 1, -1);
             }
 
-            if (verticalPostion < 6 && horizontalPostion < 6)
+            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells-2)
             {
                 //право верх
                 FindAttackMoveForChecker(checker, 1, 1);
             }
+        }
+    }
+
+    private void TryToSetCellMoveable(int cheсkingVerticalPosion, int cheсkingHorizontalPosion)
+    {
+        Cell cell = _board.GetCellData(cheсkingVerticalPosion, cheсkingHorizontalPosion);
+        if (CheckerOnConreteCell(cell) == null)
+        {
+            cell.SetMoveable();
         }
     }
 
