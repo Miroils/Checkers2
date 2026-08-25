@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Zenject;
 
 public class GameEventsController : MonoBehaviour
@@ -14,6 +15,7 @@ public class GameEventsController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private Board _board;
 
+    private Cell _enemyCellOnQueenLine;//24 08 для просчета пути королевы
     [Inject]
     private void Construct(Board board)
     {
@@ -34,6 +36,8 @@ public class GameEventsController : MonoBehaviour
     void HandleRightClick()
     {
         UnchouseAllCells();
+        ResetMoveAbleCells();
+        ResetPurifyCellsList();
     }
 
     void HandleLeftClick(Cell2D cell2d)
@@ -87,20 +91,21 @@ public class GameEventsController : MonoBehaviour
     {
         int verticalPostion = checker.GetVerticalPosition();
         int horizontalPostion = checker.GetHorizontalPosition();
+        //24 08 перемещение
         if (checker.IsQueen())
         {
-            //22 08 перемещение для квины позже добавлю
+            FindAttackMoveForQueen(checker, -1, -1);//лево низ
+            FindAttackMoveForQueen(checker, -1, 1);//право низ
+            FindAttackMoveForQueen(checker, 1, -1);//лево верх
+            FindAttackMoveForQueen(checker, 1, 1);//право верх
         }
-        else
+        else //25 08 тоже свернуть?
         {
-            //Движение вперед нужно подсобрать, DRY
             if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
             {
-                //22 08 собрать в один метод, а от передаваемого цвета изменять направление движения, или сразу передавать направление движения?
-                //22 08 ДВИЖЕНИЕ ВПЕРЕД!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 int cheсkingVerticalPosion = verticalPostion + 1;
                 int cheсkingHorizontalPosion = 0;
-                if (cheсkingVerticalPosion < GlobalGameParametrs.VerticalCells)//22 08 нужно не жестко а брать конст размер поля
+                if (cheсkingVerticalPosion < GlobalGameParametrs.VerticalCells)
                 {
                     cheсkingHorizontalPosion = horizontalPostion - 1;
                     if (cheсkingHorizontalPosion >= 0)
@@ -109,18 +114,17 @@ public class GameEventsController : MonoBehaviour
                     }
 
                     cheсkingHorizontalPosion = horizontalPostion + 1;
-                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells) //22 08 нужно не жестко задавать
+                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells)
                     {
                         TryToSetCellMoveable(cheсkingVerticalPosion, cheсkingHorizontalPosion);
                     }
                 }
-               
             }
 
             else//22 08 red
             {
                 int cheсkingVerticalPosion = verticalPostion - 1;
-                if (cheсkingVerticalPosion >= 0)//22 08 нужно не жестко а брать конст размер поля
+                if (cheсkingVerticalPosion >= 0)
                 {
                     int cheсkingHorizontalPosion = horizontalPostion - 1;
                     if (cheсkingHorizontalPosion >= 0)
@@ -129,36 +133,34 @@ public class GameEventsController : MonoBehaviour
                     }
 
                     cheсkingHorizontalPosion = horizontalPostion + 1;
-                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells) //22 08 нужно не жестко задавать
+                    if (cheсkingHorizontalPosion < GlobalGameParametrs.HorizontalCells)
                     {
                         TryToSetCellMoveable(cheсkingVerticalPosion,cheсkingHorizontalPosion);
                     }
                 }
             }
-            //22 08 ДВИЖЕНИЕ ВПЕРЕД!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
 
-            //22 08 цифры нужно подвязть к размеру поля, а не магические
-            if (verticalPostion >= 2 && horizontalPostion >= 2)
+        //24 08 перемещение + сруб
+        if (!checker.IsQueen())
+        {
+            if (verticalPostion >= 2 && horizontalPostion >= 2)//лево низ
             {
-                //лево низ
-                FindAttackMoveForChecker(checker, -1, -1);                    
+                FindAttackMoveForChecker(checker, -1, -1);
             }
 
-            if (verticalPostion >= 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells-2)
+            if (verticalPostion >= 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells - 2)//право низ
             {
-                //право низ
                 FindAttackMoveForChecker(checker, -1, 1);
             }
 
-            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion >= 2)
+            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion >= 2)//лево верх
             {
-                //лево верх
                 FindAttackMoveForChecker(checker, 1, -1);
             }
 
-            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells-2)
+            if (verticalPostion < GlobalGameParametrs.VerticalCells - 2 && horizontalPostion < GlobalGameParametrs.HorizontalCells - 2)//право верх
             {
-                //право верх
                 FindAttackMoveForChecker(checker, 1, 1);
             }
         }
@@ -173,6 +175,71 @@ public class GameEventsController : MonoBehaviour
         }
     }
 
+    private void FindAttackMoveForQueen(Checker checker, int deltaVerticalPostion, int deltaHorizontalPosition)
+    {
+        int verticalPostion = checker.GetVerticalPosition();//23 08 до этого тоже определяли, перед методом, нужно оптимизировать
+        int horizontalPostion = checker.GetHorizontalPosition();
+        CheckerColorEnum enemyColor;
+        List<Cell> cellsForPurify = new List<Cell>();
+        bool enemyOnLine = false;
+        if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
+        {
+            enemyColor = CheckerColorEnum.redChecker;
+        }
+        else
+        {
+            enemyColor = CheckerColorEnum.greenChecker;
+        }
+
+        for (int i = 1; i < GlobalGameParametrs.HorizontalCells; i++)//25 08 можно и Verticals брать
+        {
+            int cheсkingVerticalPosition = verticalPostion + deltaVerticalPostion * i;
+            int cheсkingHorizontalPosition = horizontalPostion + deltaHorizontalPosition * i;
+            
+            if (cheсkingVerticalPosition >= 0 && cheсkingHorizontalPosition >= 0 && cheсkingVerticalPosition < GlobalGameParametrs.VerticalCells
+                                                                             && cheсkingHorizontalPosition < GlobalGameParametrs.HorizontalCells)//25 08 проверка на границы поля
+            {
+                Cell chekingCell = _board.GetCellData(cheсkingVerticalPosition, cheсkingHorizontalPosition);
+                Checker checkerOnCell = CheckerOnConreteCell(chekingCell);
+                if (checkerOnCell != null)
+                {
+                    if (enemyOnLine)//25 08 был враг, а теперь линия заблочена
+                    {  
+                        return;
+                    }
+                    else
+                    {
+                        if (checkerOnCell.GetCheckerColor() == enemyColor) //22 08 враг
+                        {
+                            if (cellsForPurify.Count == 0)//25 08 за раз рубим одну шашку
+                            {
+                                enemyOnLine = true;
+                                Cell cell = _board.GetCellData(cheсkingVerticalPosition, cheсkingHorizontalPosition);
+                                cellsForPurify.Add(chekingCell);
+                                cell.AddCellToPurifyList(chekingCell);
+                            }
+                        }
+                        else//22 08 Друг, линия заблокирвоана дальше не ищем
+                        {
+                            return;
+                        }                        
+                    }
+                }
+                
+                else//22 08 пустая клетка = маркаем
+                {
+                    chekingCell.SetMoveable();
+                    if (cellsForPurify.Count > 0)
+                    {
+                        foreach (var cellForPurify in cellsForPurify)
+                        {
+                            chekingCell.AddCellToPurifyList(cellForPurify);
+                        }                            
+                    }                    
+                }
+            }
+        }
+    }
     private void FindAttackMoveForChecker(Checker checker, int deltaVerticalPostion, int deltaHorizontalPosition)
     {
         CheckerColorEnum enemyColor;
@@ -208,7 +275,6 @@ public class GameEventsController : MonoBehaviour
 
     private Checker CheckerOnConreteCell(Cell cell)
     {
-        //22 08 обращение к boardData по координатам
         Checker checker = cell.GetCheckerOnCell();
         return checker;
     }

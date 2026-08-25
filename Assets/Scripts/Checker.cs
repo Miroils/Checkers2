@@ -1,5 +1,7 @@
 
 using System;
+//using System.Diagnostics;
+using UnityEngine;
 
 public class Checker
 { 
@@ -16,7 +18,7 @@ public class Checker
         _horizontalPosition = horizontalPosition;
     }
 
-    public void PromouteToQueen()
+    private void PromouteToQueen()
     {
         _isQueen = true;
     }
@@ -50,8 +52,26 @@ public class Checker
         //20 08 занятие новой клетки
         //21 08 нужно обоновить параметры Cell
         //21 08 нужно визуализировать перемещение
+        CheackForQueenPromotion();
     }
 
+    private void CheackForQueenPromotion()
+    {
+        if (_checkerColor == CheckerColorEnum.greenChecker)
+        {
+            if (_verticalPosition == GlobalGameParametrs.VerticalCells - 1)
+            {
+                PromouteToQueen();
+            }
+        }
+        else
+        {
+            if (_verticalPosition == 0)
+            {
+                PromouteToQueen();
+            }
+        }
+    }
     public void DestroyChecker()
     {        
         CheckerDestroyedAction?.Invoke();
