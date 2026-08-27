@@ -1,8 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
+
 
 public class Checker2D : MonoBehaviour
 {
+    const string QUEEN_CHECKER_STRING = "chkr_queen";
+    const string NORMAL_CHECLER_STRING = "chkr_norm";
     [SerializeField] private SpriteRenderer _CheckerSprite;
+    //27 08 [SerializeField] private AssetReference _CheckersAssets;
     private Color _greenChecker = new Color(0.0f, 1.0f, 0.0f);//19 08 тестово дефолтные цвета
     private Color _redChecker = new Color(1.0f, 0.0f, 0.0f);//19 08 тестово дефолтные цвета
 
@@ -10,7 +19,7 @@ public class Checker2D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _checker.CheckerPromoutedAction += Update2DSprite;
     }
 
     // Update is called once per frame
@@ -29,14 +38,7 @@ public class Checker2D : MonoBehaviour
 
     void UpdateCheckerVisual()
     {
-        if (_checker.IsQueen())
-        {
-            //19 08 загружаем ресурс королевы
-        }
-        else
-        {
-            //19 08 загружаем ресур пешки
-        }
+        Update2DSprite();
         if (_checker.GetCheckerColor() == CheckerColorEnum.redChecker)
         {
             ColoringToRed();
@@ -44,6 +46,33 @@ public class Checker2D : MonoBehaviour
         else
         {
             ColoringToGreen();
+        }
+    }
+
+    private void Update2DSprite()
+    {
+        if (_checker.IsQueen())
+        {
+            StartCoroutine(LoadCheckerSpirte(QUEEN_CHECKER_STRING));
+        }
+        else
+        {
+            StartCoroutine(LoadCheckerSpirte(NORMAL_CHECLER_STRING));
+        }
+    }
+
+    private IEnumerator LoadCheckerSpirte(string spriteName)
+    {
+        //AsyncOperationHandle<Sprite> handle = Addressables.LoadAssetsAsync(spriteName, ); //_CheckersAssets.LoadAssetAsync<Sprite>();
+        var handle = Addressables.LoadAssetAsync<Sprite>(spriteName); //_CheckersAssets.LoadAssetAsync<Sprite>();
+        yield return handle;
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            Sprite sprite = handle.Result;
+            _CheckerSprite.sprite = sprite;
+
+            
+            Addressables.Release(handle);
         }
     }
 

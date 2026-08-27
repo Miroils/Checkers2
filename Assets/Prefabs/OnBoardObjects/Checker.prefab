@@ -109,3 +109,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checker2D
   _CheckerSprite: {fileID: 983253388798637753}
+  _CheckersAssets:
+    m_AssetGUID: 6f65cc016ee9e3c45b1e2dfa797facec
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0

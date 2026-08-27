@@ -11,6 +11,7 @@ public class Checker
     private int _horizontalPosition;//18 08 спорно?
 
     public Action CheckerDestroyedAction;
+    public Action CheckerPromoutedAction;
     public Checker(CheckerColorEnum checkerColor, int verticalPosition, int horizontalPosition)
     {
         _checkerColor = checkerColor;
@@ -21,6 +22,7 @@ public class Checker
     private void PromouteToQueen()
     {
         _isQueen = true;
+        CheckerPromoutedAction?.Invoke();
     }
 
     public bool IsQueen()
