@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
 using Zenject;
 
 public class GameEventsController : MonoBehaviour
@@ -10,12 +11,16 @@ public class GameEventsController : MonoBehaviour
     private Cell2D _currentCell2d;//20 08 от 2д Уйти?
     private Cell2D _chousedCell2d;//20 08 выбранная ранее
     private Cell _currentCell;//20 08 от 2д Уйти?
+    private Cell _chosedCell;//20 08 от 2д Уйти?
     private Checker _checkerOncell;
     //20 08 спорно название, предполагается ренейм и может разделение на сабклассы
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private Board _board;
+    //30 08 попытка воткнуть интерфейсы
+    private List<ICommand> _commandBuffer = new List<ICommand>();
+    private MoveCommand _moveCommand;
 
-    private Cell _enemyCellOnQueenLine;//24 08 для просчета пути королевы
+    private int _commandCounter = 0;
     [Inject]
     private void Construct(Board board)
     {
@@ -25,6 +30,8 @@ public class GameEventsController : MonoBehaviour
     {
         EventsManager.RightClickEvent.AddListener(HandleRightClick);
         EventsManager.LeftClickOnCellEvent.AddListener(HandleLeftClick);
+        EventsManager.NextActionEvent.AddListener(NextActionHandler);
+        EventsManager.PreviousActionEvent.AddListener(PreviousActionHandler);
     }
 
     // Update is called once per frame
@@ -32,6 +39,15 @@ public class GameEventsController : MonoBehaviour
     {
         
     }
+
+    private void NextActionHandler()
+    {
+        ExecuteCommand();//03 09 сразу этот метод привязать к евенту?, пока нет
+    }
+    private void PreviousActionHandler()
+    {
+        UndueCommand();//03 09 сразу этот метод привязать к евенту?, пока нет
+    }    
 
     void HandleRightClick()
     {
@@ -83,7 +99,8 @@ public class GameEventsController : MonoBehaviour
     {
         _currentCell2d.ChouseCell();
         _chousedCell2d = _currentCell2d;
-        _checkerOncell = _chousedCell2d.GetCellData().GetCheckerOnCell();
+        _chosedCell = _chousedCell2d.GetCellData();
+        _checkerOncell = _chosedCell.GetCheckerOnCell();
         FindMoveableCells(_checkerOncell);
     }
 
@@ -284,15 +301,46 @@ public class GameEventsController : MonoBehaviour
     {
         if (_currentCell2d.GetCellData().IsMoveable())
         {
-            TransitToCell();
+            AddCommandeAndExecute();//03 09 ренейминг? на норм название?
         }
     }
 
-    private void TransitToCell()
+    private void AddCommandeAndExecute()//30 08 нужно название связать с комманд
     {
-        _checkerOncell.MoveToNewPosition(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
-        ClearPreviousChoused();
+        //30 08 нужно делать в другом методе
+        _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
+        _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
+        _commandBuffer.Add(_moveCommand);        
+        ExecuteCommand();
+
+        //30 08 перенос в Execute _checkerOncell.MoveToNewPosition(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
+        //30 08 перенос в Execute ClearPreviousChoused();
     }
+
+    private void ExecuteCommand()
+    {
+        if (_commandCounter < _commandBuffer.Count)
+        {
+            _commandCounter++;
+            if (_commandCounter >= 1)
+            {
+                _commandBuffer[_commandCounter - 1].Execute();
+                ClearPreviousChoused();//03 09 вынести из команды?
+            }
+        }
+        
+    }
+
+    private void UndueCommand()
+    {
+        if (_commandCounter > 0)//03 09 уже и так в начало вернулись
+        {
+            _commandCounter--;
+            _commandBuffer[_commandCounter].Undue();
+            ClearPreviousChoused();//03 09 вынести из команды?
+        }
+    }
+
 
     void UnchouseAllCells()
     {

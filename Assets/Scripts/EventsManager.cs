@@ -18,4 +18,6 @@ public class EventsManager
     public static UnityEvent ResetCellsPurifyEvent { get; set; } = new UnityEvent();
     public static CellEvent CellPurifyEvent { get; set; } = new CellEvent();
     public static CheckerEvent DestroyCheckerEvent { get; set; } = new CheckerEvent();
+    public static UnityEvent NextActionEvent { get; set; } = new UnityEvent();
+    public static UnityEvent PreviousActionEvent { get; set; } = new UnityEvent();
 }

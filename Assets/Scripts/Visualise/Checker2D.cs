@@ -20,6 +20,7 @@ public class Checker2D : MonoBehaviour
     void Start()
     {
         _checker.CheckerPromoutedAction += Update2DSprite;
+        _checker.CheckerDemoutedAction += Update2DSprite;
     }
 
     // Update is called once per frame

@@ -12,6 +12,7 @@ public class Checker
 
     public Action CheckerDestroyedAction;
     public Action CheckerPromoutedAction;
+    public Action CheckerDemoutedAction;
     public Checker(CheckerColorEnum checkerColor, int verticalPosition, int horizontalPosition)
     {
         _checkerColor = checkerColor;
@@ -23,6 +24,12 @@ public class Checker
     {
         _isQueen = true;
         CheckerPromoutedAction?.Invoke();
+    }
+
+    private void Demoute()
+    {
+        _isQueen = false;
+        CheckerDemoutedAction?.Invoke();
     }
 
     public bool IsQueen()
@@ -51,26 +58,26 @@ public class Checker
         _verticalPosition = newVerticalPostion;
         _horizontalPosition = newHorizontalPostion;
         EventsManager.TransitCheckerEvent?.Invoke(this);
-        //20 08 занятие новой клетки
-        //21 08 нужно обоновить параметры Cell
-        //21 08 нужно визуализировать перемещение
-        CheackForQueenPromotion();
+        CheckForQueenPromotion();
     }
 
-    private void CheackForQueenPromotion()
+    private void CheckForQueenPromotion()
     {
-        if (_checkerColor == CheckerColorEnum.greenChecker)
+        if (!_isQueen)
         {
-            if (_verticalPosition == GlobalGameParametrs.VerticalCells - 1)
+            if (_checkerColor == CheckerColorEnum.greenChecker)
             {
-                PromouteToQueen();
+                if (_verticalPosition == GlobalGameParametrs.VerticalCells - 1)
+                {
+                    PromouteToQueen();
+                }
             }
-        }
-        else
-        {
-            if (_verticalPosition == 0)
+            else
             {
-                PromouteToQueen();
+                if (_verticalPosition == 0)
+                {
+                    PromouteToQueen();
+                }
             }
         }
     }
