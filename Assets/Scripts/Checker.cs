@@ -11,6 +11,7 @@ public class Checker
     private int _horizontalPosition;//18 08 спорно?
 
     public Action CheckerDestroyedAction;
+    public Action CheckerReturnedAction;
     public Action CheckerPromoutedAction;
     public Action CheckerDemoutedAction;
     public Checker(CheckerColorEnum checkerColor, int verticalPosition, int horizontalPosition)
@@ -84,5 +85,10 @@ public class Checker
     public void DestroyChecker()
     {        
         CheckerDestroyedAction?.Invoke();
+    }
+
+    public void ReturnChecker()
+    {
+        CheckerReturnedAction?.Invoke();
     }
 }

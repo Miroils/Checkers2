@@ -103,4 +103,8 @@ public class Cell
         return _moveable;
     }
 
+    public List<Cell> GetCellsForPurify()
+    {
+        return _cellsForPurify;
+    }
 }

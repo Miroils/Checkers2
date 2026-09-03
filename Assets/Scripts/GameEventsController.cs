@@ -7,7 +7,6 @@ public class GameEventsController : MonoBehaviour
 {
     //22 08 нужно связать с BoardData или Board, через Zenject?
 
-
     private Cell2D _currentCell2d;//20 08 от 2д Уйти?
     private Cell2D _chousedCell2d;//20 08 выбранная ранее
     private Cell _currentCell;//20 08 от 2д Уйти?
@@ -196,8 +195,8 @@ public class GameEventsController : MonoBehaviour
     {
         int verticalPostion = checker.GetVerticalPosition();//23 08 до этого тоже определяли, перед методом, нужно оптимизировать
         int horizontalPostion = checker.GetHorizontalPosition();
-        CheckerColorEnum enemyColor;
         List<Cell> cellsForPurify = new List<Cell>();
+        CheckerColorEnum enemyColor;
         bool enemyOnLine = false;
         if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
         {
@@ -273,18 +272,24 @@ public class GameEventsController : MonoBehaviour
         int cheсkingVerticalPosition = verticalPosition + deltaVerticalPostion;
         int cheсkingHorizontalPosition = horizontalPosition + deltaHorizontalPosition;
         Cell cellThisEnemy = _board.GetCellData(cheсkingVerticalPosition, cheсkingHorizontalPosition);
+        List<Cell> cellsForPurify = new List<Cell>();
+        //03 09 добавить в prufy список который мы передадим в команду
         Checker checkerOnCell = CheckerOnConreteCell(cellThisEnemy);
         if (checkerOnCell != null)
         {
             if (checkerOnCell.GetCheckerColor() == enemyColor) //22 08 враг
             {
+                cellsForPurify.Add(cellThisEnemy);
                 cheсkingVerticalPosition = verticalPosition + 2 * deltaVerticalPostion;
                 cheсkingHorizontalPosition = horizontalPosition + 2 * deltaHorizontalPosition;
                 Cell cell = _board.GetCellData(cheсkingVerticalPosition, cheсkingHorizontalPosition);
                 if (CheckerOnConreteCell(cell) == null)
                 {
                     cell.SetMoveable();
-                    cell.AddCellToPurifyList(cellThisEnemy);
+                    foreach (var cellForPurify in cellsForPurify)//03 09 пока за раз рубим лишь одну
+                    {
+                        cell.AddCellToPurifyList(cellForPurify);
+                    }
                 }
             }
         }
@@ -303,18 +308,35 @@ public class GameEventsController : MonoBehaviour
         {
             AddCommandeAndExecute();//03 09 ренейминг? на норм название?
         }
+        //03 09 _cellsForPurify = new List<Cell>();
     }
 
     private void AddCommandeAndExecute()//30 08 нужно название связать с комманд
     {
-        //30 08 нужно делать в другом методе
+        //30 09 нужно делать в другом методе
         _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
         _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
-        _commandBuffer.Add(_moveCommand);        
+        _moveCommand.SetPurifiedList(GeneratePurfiedCheckersList());
+
+        //03 09 передать килинг лист
+        //03 09 передать промоутин
+        _commandBuffer.Add(_moveCommand);
         ExecuteCommand();
 
         //30 08 перенос в Execute _checkerOncell.MoveToNewPosition(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
         //30 08 перенос в Execute ClearPreviousChoused();
+    }
+
+    private List<Checker> GeneratePurfiedCheckersList()
+    {
+        List<Checker> checkersForPurify = new List<Checker>();
+        List<Cell> cells = _currentCell.GetCellsForPurify();
+        foreach (Cell cell in cells)
+        {
+            checkersForPurify.Add(cell.GetCheckerOnCell());
+        }
+        //_moveCommand.SetPurifiedList(_currentCell.TESTRETRUN());
+        return checkersForPurify;
     }
 
     private void ExecuteCommand()
@@ -322,11 +344,8 @@ public class GameEventsController : MonoBehaviour
         if (_commandCounter < _commandBuffer.Count)
         {
             _commandCounter++;
-            if (_commandCounter >= 1)
-            {
-                _commandBuffer[_commandCounter - 1].Execute();
-                ClearPreviousChoused();//03 09 вынести из команды?
-            }
+            _commandBuffer[_commandCounter - 1].Execute();
+            ClearPreviousChoused();//03 09 вынести из команды?            
         }
         
     }

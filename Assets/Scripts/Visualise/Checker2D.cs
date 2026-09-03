@@ -19,8 +19,7 @@ public class Checker2D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _checker.CheckerPromoutedAction += Update2DSprite;
-        _checker.CheckerDemoutedAction += Update2DSprite;
+
     }
 
     // Update is called once per frame
@@ -34,6 +33,9 @@ public class Checker2D : MonoBehaviour
     {
         _checker = checker;
         _checker.CheckerDestroyedAction += Checker2DDestroy;
+        _checker.CheckerReturnedAction += Checker2DReturn;
+        _checker.CheckerPromoutedAction += Update2DSprite;
+        _checker.CheckerDemoutedAction += Update2DSprite;
         UpdateCheckerVisual();
     }
 
@@ -86,13 +88,13 @@ public class Checker2D : MonoBehaviour
         _CheckerSprite.color = _greenChecker;
     }
 
-    private void TransitToNewPostion()
-    {
-
-    }
-
     private void Checker2DDestroy()
     {
-        Destroy(this.gameObject);
+        gameObject.SetActive(false);
+    }
+
+    private void Checker2DReturn()
+    {
+        gameObject.SetActive(true);
     }
 }
