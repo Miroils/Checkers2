@@ -74,7 +74,6 @@ public class GameEventsController : MonoBehaviour
             else if (_chousedCell2d != null)
             {
                 TryToAction();
-                _currentCell.PurifingFromList();
                 ResetMoveAbleCells();
                 ResetPurifyCellsList();
             }
@@ -273,7 +272,6 @@ public class GameEventsController : MonoBehaviour
         int cheсkingHorizontalPosition = horizontalPosition + deltaHorizontalPosition;
         Cell cellThisEnemy = _board.GetCellData(cheсkingVerticalPosition, cheсkingHorizontalPosition);
         List<Cell> cellsForPurify = new List<Cell>();
-        //03 09 добавить в prufy список который мы передадим в команду
         Checker checkerOnCell = CheckerOnConreteCell(cellThisEnemy);
         if (checkerOnCell != null)
         {
@@ -308,7 +306,6 @@ public class GameEventsController : MonoBehaviour
         {
             AddCommandeAndExecute();//03 09 ренейминг? на норм название?
         }
-        //03 09 _cellsForPurify = new List<Cell>();
     }
 
     private void AddCommandeAndExecute()//30 08 нужно название связать с комманд
@@ -316,15 +313,10 @@ public class GameEventsController : MonoBehaviour
         //30 09 нужно делать в другом методе
         _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
         _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
-        _moveCommand.SetPurifiedList(GeneratePurfiedCheckersList());
+        _moveCommand.SetPurifiedList(GeneratePuryfiedCheckersList());
         _moveCommand.SetQueenPromoutedState(CheckQueenPromoution());
-        //03 09 передать килинг лист
-        //03 09 передать промоутин
         _commandBuffer.Add(_moveCommand);
         ExecuteCommand();
-
-        //30 08 перенос в Execute _checkerOncell.MoveToNewPosition(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
-        //30 08 перенос в Execute ClearPreviousChoused();
     }
 
     private bool CheckQueenPromoution()
@@ -350,7 +342,7 @@ public class GameEventsController : MonoBehaviour
         return toQueenPromotion;
     }
 
-    private List<Checker> GeneratePurfiedCheckersList()
+    private List<Checker> GeneratePuryfiedCheckersList()
     {
         List<Checker> checkersForPurify = new List<Checker>();
         List<Cell> cells = _currentCell.GetCellsForPurify();
@@ -358,7 +350,6 @@ public class GameEventsController : MonoBehaviour
         {
             checkersForPurify.Add(cell.GetCheckerOnCell());
         }
-        //_moveCommand.SetPurifiedList(_currentCell.TESTRETRUN());
         return checkersForPurify;
     }
 
@@ -369,8 +360,7 @@ public class GameEventsController : MonoBehaviour
             _commandCounter++;
             _commandBuffer[_commandCounter - 1].Execute();
             ClearPreviousChoused();//03 09 вынести из команды?            
-        }
-        
+        }        
     }
 
     private void UndueCommand()

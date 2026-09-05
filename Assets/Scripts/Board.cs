@@ -9,6 +9,7 @@ public class Board : MonoBehaviour
     void Start()
     {
         EventsManager.ClearingCellEvent.AddListener(ClearingCell);
+        EventsManager.SetCheckerOnCellEvent.AddListener(SetCheckerOnCell);
         EventsManager.TransitCheckerEvent.AddListener(TransitChecker);
         EventsManager.ResetCellsMoveableEvent.AddListener(ResetAllCellMoveable);
         EventsManager.ResetCellsPurifyEvent.AddListener(ResetAllCellsPurify);
@@ -36,6 +37,11 @@ public class Board : MonoBehaviour
     {
         //21 08 немного перегружено?
         _boardData.ClearCell(verticalPostion, horizontalPostion);
+    }
+
+    private void SetCheckerOnCell(Checker checker)
+    {
+        _boardData.SetCheckerOnCell(checker);
     }
 
     private void TransitChecker(Checker checker)

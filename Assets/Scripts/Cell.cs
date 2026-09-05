@@ -6,8 +6,6 @@ using Unity.VisualScripting;
 
 public class Cell 
 {
-    //03 08 позиция?
-    //03 08 или то, что она на краю?
     private CellColorEnum _cellColor;
     private Checker _checkerOnCell;
 
@@ -17,8 +15,8 @@ public class Cell
     private bool _moveable;
     public Action <bool> MoveableChangedAction;
 
-    private List<Cell> _cellsForPurify = new List<Cell>();//23 08 ячейки который нужно очистить при попадании в данную ячейку
-    public void SetCellColor(CellColorEnum newCellColor) //18 08 в конструктор закинуть?
+    private List<Cell> _cellsForPurify = new List<Cell>();
+    public void SetCellColor(CellColorEnum newCellColor)
     {
         _cellColor = newCellColor;
     }
@@ -77,12 +75,9 @@ public class Cell
 
     public void PurifyCell()
     {
-        EventsManager.DestroyCheckerEvent?.Invoke(_checkerOnCell);
         RemoveCheckerFromCell();
-        //23 08 очистка данных о чекер
-        //23 08 поиск и удаления чекера, евентом?
     }
-
+    
     public void PurifingFromList()
     {
         foreach (var cell in _cellsForPurify)

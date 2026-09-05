@@ -20,4 +20,5 @@ public class EventsManager
     public static CheckerEvent DestroyCheckerEvent { get; set; } = new CheckerEvent();
     public static UnityEvent NextActionEvent { get; set; } = new UnityEvent();
     public static UnityEvent PreviousActionEvent { get; set; } = new UnityEvent();
+    public static CheckerEvent SetCheckerOnCellEvent { get; set; } = new CheckerEvent();
 }

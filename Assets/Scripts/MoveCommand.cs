@@ -12,18 +12,19 @@ public class MoveCommand : ICommand
     private int _horizontalPositionStart;
     private int _verticalPostionEnd;
     private int _horizontalPositionEnd;
-    private List<Checker> _purifedList;
+    private List<Checker> _purifedCheckersList;
     private bool _queenPromouted;
     public void Execute()
     {
         _checker.MoveToNewPosition(_verticalPostionEnd, _horizontalPositionEnd);
-        CheckQueenState();
+        HandlePurifyCheckersList();
+        CheckQueenState();        
     }
 
     public void Undue()
     {
         _checker.MoveToNewPosition(_verticalPostionStart, _horizontalPositionStart);
-        RestoreFromPurifed();
+        RestoreFromPurifedCheckers();
         CheckNoQueenState();
     }
 
@@ -42,7 +43,7 @@ public class MoveCommand : ICommand
 
     public void SetPurifiedList(List <Checker> checkersList)
     {        
-        _purifedList = checkersList;
+        _purifedCheckersList = checkersList;
     }
 
     public void SetQueenPromoutedState(bool queenPromouted)
@@ -50,12 +51,21 @@ public class MoveCommand : ICommand
         _queenPromouted = queenPromouted;
     }
 
-    private void RestoreFromPurifed()
+    private void RestoreFromPurifedCheckers()
     {
-        //03 09 возвращаем срубленных
-        foreach (Checker checker in _purifedList)
+        foreach (Checker checker in _purifedCheckersList)
         {
             checker.ReturnChecker();
+            EventsManager.SetCheckerOnCellEvent?.Invoke(checker);
+        }
+    }
+
+    private void HandlePurifyCheckersList()
+    {
+        foreach (Checker checker in _purifedCheckersList)
+        {
+            checker.DestroyChecker();
+            EventsManager.ClearingCellEvent?.Invoke(checker.GetVerticalPosition(), checker.GetHorizontalPosition());
         }
     }
 
