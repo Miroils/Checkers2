@@ -317,7 +317,7 @@ public class GameEventsController : MonoBehaviour
         _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
         _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
         _moveCommand.SetPurifiedList(GeneratePurfiedCheckersList());
-
+        _moveCommand.SetQueenPromoutedState(CheckQueenPromoution());
         //03 09 передать килинг лист
         //03 09 передать промоутин
         _commandBuffer.Add(_moveCommand);
@@ -325,6 +325,29 @@ public class GameEventsController : MonoBehaviour
 
         //30 08 перенос в Execute _checkerOncell.MoveToNewPosition(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
         //30 08 перенос в Execute ClearPreviousChoused();
+    }
+
+    private bool CheckQueenPromoution()
+    {
+        bool toQueenPromotion = false;
+        if (!_checkerOncell.IsQueen())
+        {
+            if (_checkerOncell.GetCheckerColor() == CheckerColorEnum.greenChecker)
+            {
+                if (_currentCell.GetVerticalPostion() == GlobalGameParametrs.VerticalCells - 1)
+                {
+                    toQueenPromotion = true;
+                }
+            }
+            else
+            {
+                if (_currentCell.GetHorizontalPostion() == 0)
+                {
+                    toQueenPromotion = true;
+                }
+            }
+        }
+        return toQueenPromotion;
     }
 
     private List<Checker> GeneratePurfiedCheckersList()

@@ -21,13 +21,13 @@ public class Checker
         _horizontalPosition = horizontalPosition;
     }
 
-    private void PromouteToQueen()
+    public void PromouteToQueen()
     {
         _isQueen = true;
         CheckerPromoutedAction?.Invoke();
     }
 
-    private void Demoute()
+    public void Demoute()
     {
         _isQueen = false;
         CheckerDemoutedAction?.Invoke();
@@ -59,29 +59,8 @@ public class Checker
         _verticalPosition = newVerticalPostion;
         _horizontalPosition = newHorizontalPostion;
         EventsManager.TransitCheckerEvent?.Invoke(this);
-        CheckForQueenPromotion();
     }
 
-    private void CheckForQueenPromotion()
-    {
-        if (!_isQueen)
-        {
-            if (_checkerColor == CheckerColorEnum.greenChecker)
-            {
-                if (_verticalPosition == GlobalGameParametrs.VerticalCells - 1)
-                {
-                    PromouteToQueen();
-                }
-            }
-            else
-            {
-                if (_verticalPosition == 0)
-                {
-                    PromouteToQueen();
-                }
-            }
-        }
-    }
     public void DestroyChecker()
     {        
         CheckerDestroyedAction?.Invoke();
