@@ -343,7 +343,7 @@ public class GameEventsController : MonoBehaviour
             }
             else
             {
-                if (_currentCell.GetHorizontalPostion() == 0)
+                if (_currentCell.GetVerticalPostion() == 0)
                 {
                     toQueenPromotion = true;
                 }
