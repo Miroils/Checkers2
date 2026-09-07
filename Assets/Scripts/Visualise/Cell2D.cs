@@ -5,8 +5,7 @@ public class Cell2D : MonoBehaviour
     [SerializeField] private SpriteRenderer _cellSprite;
     [SerializeField] private SpriteRenderer _cellHighlightSprite;
     [SerializeField] private SpriteRenderer _cellHighlightMoveableSprite;
-    private Cell _cell;
-    private bool _chouseable;
+    private Cell _cell;    
     private Color _whiteCell = new Color(0.86f, 0.807f, 0.807f);
     private Color _blackCell = new Color(0.302f, 0.231f, 0.157f);
 
@@ -22,29 +21,25 @@ public class Cell2D : MonoBehaviour
         }
     }
 
-    public void ChouseCell()
+    private void ChouseCell(bool chouseState)
     {
-        _cellHighlightSprite.gameObject.SetActive(true);
-    }
-
-    public void UnchouseCell()
-    {
-        _cellHighlightSprite.gameObject.SetActive(false);
+        _cellHighlightSprite.gameObject.SetActive(chouseState);
     }
 
     public void Initialization(Cell cell)
     {
         _cell = cell;
         _cell.MoveableChangedAction += HighLightMoveableCell;
+        _cell.CellChousedAction += ChouseCell;
         if (cell.GetCellColor() == CellColorEnum.BlackCell)
         {
-            _chouseable = true;
+            _cell.Chouseable = true;
         }
     }
 
     public bool IsChouseable()
     {
-        return _chouseable;
+        return _cell.Chouseable;
     }
 
     public Cell GetCellData()

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 public class Cell 
 {
+    public bool Chouseable {  get; set; }
+    public Action<bool> CellChousedAction;
     private CellColorEnum _cellColor;
     private Checker _checkerOnCell;
     private int _verticalPostion;
     private int _horizontalPostion;
     private bool _moveable;
+    private bool _choused;
     public Action <bool> MoveableChangedAction;
     private List<Cell> _cellsForPurify = new List<Cell>();
 
@@ -95,5 +98,16 @@ public class Cell
     public List<Cell> GetCellsForPurify()
     {
         return _cellsForPurify;
+    }
+    public void ChouseCell()
+    {
+        _choused = true;
+        CellChousedAction.Invoke(_choused);
+    }
+
+    public void UnchouseCell()
+    {
+        _choused = false;
+        CellChousedAction.Invoke(_choused);
     }
 }

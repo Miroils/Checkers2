@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
@@ -5,20 +6,28 @@ using Zenject;
 public class Board : MonoBehaviour
 {
     private BoardData _boardData;
-
-    public BoardData GetBoardData()
-    {
-        return _boardData;
-    }
-
+    
     public void SetBoardData(BoardData boardData)
     {
         _boardData = boardData;
     }
-
+    
     public Cell GetCellData(int verticalPostion, int horizontalPostion)
     {
-        return _boardData.GetAnCellParametrs(verticalPostion, horizontalPostion);
+        return _boardData.Cells[verticalPostion, horizontalPostion];
+    }
+
+    public Cell[,] GetCellsParametrs()
+    {
+        return _boardData.Cells;
+    }
+    public List<Checker> GetCheckersList(CheckerColorEnum checkerColorEnum)
+    {
+        if (checkerColorEnum == CheckerColorEnum.RedChecker)
+        {
+            return _boardData.RedCheckers;
+        }
+        return _boardData.GreenCheckers;
     }
 
     private void Start()
@@ -34,28 +43,34 @@ public class Board : MonoBehaviour
 
     private void ClearingCell(int verticalPostion, int horizontalPostion)
     {
-        _boardData.ClearCell(verticalPostion, horizontalPostion);
+        _boardData.Cells[verticalPostion, horizontalPostion].RemoveCheckerFromCell();
     }
 
     private void SetCheckerOnCell(Checker checker)
     {
-        _boardData.SetCheckerOnCell(checker);
+        _boardData.Cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
     }
 
     private void TransitChecker(Checker checker)
     {
-        _boardData.SetCheckerOnCell(checker);    
+        _boardData.Cells[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].SetCheckerOnCell(checker);
         EventsManager.AnimateCheckerTranstionEvent?.Invoke(checker);
     }
 
     private void ResetAllCellMoveable()
     {
-        _boardData.ResetAllCellMoveable();
+        foreach (Cell cell in _boardData.Cells)
+        {
+            cell.ResetMoveable();
+        }
     }
 
     private void ResetAllCellsPurify()
     {
-        _boardData.ResetAllCellPurify();
+        foreach (Cell cell in _boardData.Cells)
+        {
+            cell.ClearPurifyList();
+        }
     }
 
     private void CellPurify(Cell cell)
@@ -65,6 +80,8 @@ public class Board : MonoBehaviour
 
     private void DestroyChecker(Checker checker)
     {
-        _boardData.DestroyChecker(checker);
+        _boardData.GreenCheckers.Remove(checker);
+        _boardData.RedCheckers.Remove(checker);
+        checker.DestroyChecker();
     }
 }
