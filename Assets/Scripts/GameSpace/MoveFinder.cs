@@ -149,7 +149,7 @@ public class MoveFinder : MonoBehaviour
             Checker checkerOnCell = CheckerOnConreteCell(cellThisEnemy);
             if (checkerOnCell != null)
             {
-                if (checkerOnCell.GetCheckerColor() == enemyColor) //22 08 враг
+                if (checkerOnCell.GetCheckerColor() == enemyColor)
                 {
                     cellsForPurify.Add(cellThisEnemy);
                     cheсkingVerticalPosition = verticalPosition + 2 * deltaVerticalPostion;

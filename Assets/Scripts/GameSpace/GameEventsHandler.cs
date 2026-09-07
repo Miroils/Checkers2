@@ -1,25 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using Zenject;
 
 public class GameEventsHandler : MonoBehaviour
 {
-    //private Cell2D _currentCell2d;//20 08 от 2д Уйти?
-    //private Cell2D _chousedCell2d;//20 08 выбранная ранее
-    private Cell _currentCell;//20 08 от 2д Уйти?
-    private Cell _chosedCell;//20 08 от 2д Уйти?
+    private Cell _currentCell;
+    private Cell _chosedCell;
     private Checker _checkerOncell;
-    private Board _board;
     private List<ICommand> _commandBuffer = new List<ICommand>();
     private MoveCommand _moveCommand;
 
     private int _commandCounter = 0;
-    [Inject]
-    private void Construct(Board board)
-    {
-        _board = board;
-    }
     private void Start()
     {
         EventsManager.RightClickEvent.AddListener(HandleRightClick);
@@ -30,29 +20,27 @@ public class GameEventsHandler : MonoBehaviour
 
     private void NextActionHandler()
     {
-        ExecuteCommand();//03 09 сразу этот метод привязать к евенту?, пока нет
+        ExecuteCommand();
     }
     private void PreviousActionHandler()
     {
-        UndueCommand();//03 09 сразу этот метод привязать к евенту?, пока нет
+        UndueCommand();
     }    
 
-    void HandleRightClick()
+    private void HandleRightClick()
     {
         UnchoseAllCells();
         ResetMoveAbleCells();
         ResetPurifyCellsList();
     }
 
-    void HandleLeftClick(Cell cell)
+    private void HandleLeftClick(Cell cell)
     {
-        _currentCell = cell;
-        //20 08 принимать не 2д, с просто селл?            
-        UnchoseAllCells();
-        //20 08 еще нужны условия, чей сейчас ход            
+        _currentCell = cell;        
+        UnchoseAllCells();         
         if (cell.Chouseable) //20 08 все черные
         {
-            if (_currentCell.GetCheckerOnCell() != null)//не пустая
+            if (_currentCell.GetCheckerOnCell() != null)
             {
                 ResetMoveAbleCells();
                 ResetPurifyCellsList();
@@ -93,20 +81,19 @@ public class GameEventsHandler : MonoBehaviour
     {
         if (_currentCell.IsMoveable())
         {
-            AddCommandeAndExecute();//03 09 ренейминг? на норм название?
+            AddCommand();
+            ExecuteCommand();
         }
     }
 
-    private void AddCommandeAndExecute()//30 08 нужно название связать с комманд
+    private void AddCommand()
     {
-        //30 09 нужно делать в другом методе
         _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
         _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
         _moveCommand.SetPurifiedList(GeneratePuryfiedCheckersList());
         _moveCommand.QueenPromouted = CheckQueenPromoution();
         ClearOldCommandLine();
-        _commandBuffer.Add(_moveCommand);
-        ExecuteCommand();
+        _commandBuffer.Add(_moveCommand);        
     }
 
     private void ClearOldCommandLine()
@@ -158,27 +145,26 @@ public class GameEventsHandler : MonoBehaviour
         {
             _commandCounter++;
             _commandBuffer[_commandCounter - 1].Execute();
-            ClearPreviousChoused();//03 09 вынести из команды?            
+            ClearPreviousChoused();         
         }        
     }
 
     private void UndueCommand()
     {
-        if (_commandCounter > 0)//03 09 уже и так в начало вернулись
+        if (_commandCounter > 0)
         {
             _commandCounter--;
             _commandBuffer[_commandCounter].Undue();
-            ClearPreviousChoused();//03 09 вынести из команды?
+            ClearPreviousChoused();
         }
     }
 
-
-    void UnchoseAllCells()
+    private void UnchoseAllCells()
     {
         EventsManager.UnchouseAllCellsEvent?.Invoke();
     }
 
-    void ClearPreviousChoused()
+    private void ClearPreviousChoused()
     {
         _chosedCell = null;
     }

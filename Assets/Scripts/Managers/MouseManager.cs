@@ -21,8 +21,6 @@ public class MouseManager : MonoBehaviour
 
     private void LeftClickOnCell(Cell cell)
     {
-        //20 08 может принимать не cell2d, a cell?
-        //19 08 вызываем евент, что кликнули на некий селл и отрабатываем если можем
         EventsManager.LeftClickOnCellEvent?.Invoke(cell);
     }
 

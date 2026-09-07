@@ -10,7 +10,6 @@ public class Checker2D : MonoBehaviour
     [SerializeField] private SpriteRenderer _checkerSprite;
     private Color _greenChecker = new Color(0.0f, 1.0f, 0.0f);//19 08 тестово дефолтные цвета
     private Color _redChecker = new Color(1.0f, 0.0f, 0.0f);//19 08 тестово дефолтные цвета
-
     private Checker _checker;
 
     public void Initialization(Checker checker)
