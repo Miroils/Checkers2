@@ -1,5 +1,5 @@
 public enum CheckerColorEnum
 {
-    redChecker,
-    greenChecker
+    RedChecker,
+    GreenChecker
 }

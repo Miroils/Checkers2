@@ -1,5 +1,5 @@
 public interface ICommand
 {
-    void Execute();//принимаем текущий ход, чтобы переход в королеву отследить
-    void Undue();//принимаем текущий ход, чтобы переход в королеву отследить
+    void Execute();
+    void Undue();
 }

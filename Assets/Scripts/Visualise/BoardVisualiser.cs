@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class BoardVisualiser : MonoBehaviour
 {
     private const float DELTA_POSITION_FOR_CELL = 1f;
-
     //17 08 разделить создание 2д клеток и остальную логику с ними
     [SerializeField] private Cell2D _boardCellPrefab;
     [SerializeField] private Checker2D _checkerPrefab;
@@ -21,8 +20,7 @@ public class BoardVisualiser : MonoBehaviour
     private List<Checker> _greenCheckersList;
     private Dictionary<Checker,Checker2D> _checkers2Dictionary;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    private void Awake()
     {        
         EventsManager.BoardIsGeneratedEvent.AddListener(VisualiseBoard);   
         EventsManager.UnchouseAllCellsEvent.AddListener(UnchosedAllCells);   
@@ -58,7 +56,6 @@ public class BoardVisualiser : MonoBehaviour
             {
                 cellPostionX += DELTA_POSITION_FOR_CELL;
                 Vector2 cellFinalPositon = new Vector2(cellPostionX, cellPostionY);
-                //test Cell2D cell = Instantiate(_boardTilePrefab, cellFinalPositon, Quaternion.identity, _startPositionForSell.transform);
                 Cell2D cell2D = Instantiate(_boardCellPrefab, _startPositionForSell.transform);
                 cell2D.transform.localPosition = cellFinalPositon;
                 cell2D.Initialization(_cells[i, j]);
@@ -74,16 +71,14 @@ public class BoardVisualiser : MonoBehaviour
     }
     private void VisualiseCheckers()
     {
-        _redCheckersList = _boardData.GetCheckersList(CheckerColorEnum.redChecker);        
-        _greenCheckersList = _boardData.GetCheckersList(CheckerColorEnum.greenChecker);
+        _redCheckersList = _boardData.GetCheckersList(CheckerColorEnum.RedChecker);        
+        _greenCheckersList = _boardData.GetCheckersList(CheckerColorEnum.GreenChecker);
         _checkers2Dictionary = new Dictionary<Checker, Checker2D>();
 
         int checkerCounter = 0;
         foreach (Checker checker in _redCheckersList)
         {
-            int verticalPostion = checker.GetVerticalPosition();
-            int horizontalPostion = checker.GetHorizontalPosition();
-            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[verticalPostion, horizontalPostion].transform);
+            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].transform);
             checker2D.Initialization(checker);
             _checkers2Dictionary.Add(checker, checker2D);
             checker2D.name = "Red" + checkerCounter;
@@ -93,9 +88,7 @@ public class BoardVisualiser : MonoBehaviour
         checkerCounter = 0;
         foreach (Checker checker in _greenCheckersList)
         {
-            int verticalPostion = checker.GetVerticalPosition();
-            int horizontalPostion = checker.GetHorizontalPosition();
-            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[verticalPostion, horizontalPostion].transform);
+            Checker2D checker2D = Instantiate(_checkerPrefab, _cells2d[checker.GetVerticalPosition(), checker.GetHorizontalPosition()].transform);
             checker2D.Initialization(checker);
             _checkers2Dictionary.Add(checker, checker2D);
             checker2D.name = "Green" + checkerCounter;
@@ -113,7 +106,6 @@ public class BoardVisualiser : MonoBehaviour
 
     private void TransitChecker(Checker checker)
     {
-        //21 08 магический вектор, чтобы фишка была перед полем
         _checkers2Dictionary[checker].transform.position = _cells2d[checker.GetVerticalPosition(),checker.GetHorizontalPosition()].transform.position + new Vector3 (0,0,-1);        
     }
 }

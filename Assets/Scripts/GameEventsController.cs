@@ -116,7 +116,7 @@ public class GameEventsController : MonoBehaviour
         }
         else //25 08 тоже свернуть?
         {
-            if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
+            if (checker.GetCheckerColor() == CheckerColorEnum.GreenChecker)
             {
                 int cheсkingVerticalPosion = verticalPostion + 1;
                 int cheсkingHorizontalPosion = 0;
@@ -197,13 +197,13 @@ public class GameEventsController : MonoBehaviour
         List<Cell> cellsForPurify = new List<Cell>();
         CheckerColorEnum enemyColor;
         bool enemyOnLine = false;
-        if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
+        if (checker.GetCheckerColor() == CheckerColorEnum.GreenChecker)
         {
-            enemyColor = CheckerColorEnum.redChecker;
+            enemyColor = CheckerColorEnum.RedChecker;
         }
         else
         {
-            enemyColor = CheckerColorEnum.greenChecker;
+            enemyColor = CheckerColorEnum.GreenChecker;
         }
 
         for (int i = 1; i < GlobalGameParametrs.HorizontalCells; i++)//25 08 можно и Verticals брать
@@ -258,13 +258,13 @@ public class GameEventsController : MonoBehaviour
     private void FindAttackMoveForChecker(Checker checker, int deltaVerticalPostion, int deltaHorizontalPosition)
     {
         CheckerColorEnum enemyColor;
-        if (checker.GetCheckerColor() == CheckerColorEnum.greenChecker)
+        if (checker.GetCheckerColor() == CheckerColorEnum.GreenChecker)
         {
-            enemyColor = CheckerColorEnum.redChecker;
+            enemyColor = CheckerColorEnum.RedChecker;
         }
         else
         {
-            enemyColor = CheckerColorEnum.greenChecker;
+            enemyColor = CheckerColorEnum.GreenChecker;
         }
         int verticalPosition = checker.GetVerticalPosition();//23 08 до этого тоже определяли, перед методом, нужно оптимизировать
         int horizontalPosition = checker.GetHorizontalPosition();
@@ -334,7 +334,7 @@ public class GameEventsController : MonoBehaviour
         bool toQueenPromotion = false;
         if (!_checkerOncell.IsQueen())
         {
-            if (_checkerOncell.GetCheckerColor() == CheckerColorEnum.greenChecker)
+            if (_checkerOncell.GetCheckerColor() == CheckerColorEnum.GreenChecker)
             {
                 if (_currentCell.GetVerticalPostion() == GlobalGameParametrs.VerticalCells - 1)
                 {

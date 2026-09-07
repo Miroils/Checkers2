@@ -49,9 +49,9 @@ public class BoardData
         {
             for (int j = 0; j < _horizontalCells; j++)
             {
-                if (_cells[i,j].GetCellColor() == CellColorEnum.blackCell)
+                if (_cells[i,j].GetCellColor() == CellColorEnum.BlackCell)
                 {
-                    Checker newChecker = new Checker(CheckerColorEnum.greenChecker, i, j);
+                    Checker newChecker = new Checker(CheckerColorEnum.GreenChecker, i, j);
                     _greenCheckers.Add(newChecker);//18 08 повторяемость с red?
                     _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с red?
                 }
@@ -64,9 +64,9 @@ public class BoardData
         {
             for (int j = 0; j < _horizontalCells; j++)
             {
-                if (_cells[i, j].GetCellColor() == CellColorEnum.blackCell)
+                if (_cells[i, j].GetCellColor() == CellColorEnum.BlackCell)
                 {
-                    Checker newChecker = new Checker(CheckerColorEnum.redChecker, i, j);
+                    Checker newChecker = new Checker(CheckerColorEnum.RedChecker, i, j);
                     _redCheckers.Add(newChecker);//18 08 повторяемость с green?
                     _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с green?
                 }
@@ -86,14 +86,14 @@ public class BoardData
                 {
                     if (j % 2 == 0)
                     {
-                        _cells[i, j].SetCellColor(CellColorEnum.blackCell);
+                        _cells[i, j].SetCellColor(CellColorEnum.BlackCell);
                     }
                 }
                 else
                 {
                     if (j % 2 == 1)
                     {
-                        _cells[i, j].SetCellColor(CellColorEnum.blackCell);
+                        _cells[i, j].SetCellColor(CellColorEnum.BlackCell);
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class BoardData
 
     public List<Checker> GetCheckersList(CheckerColorEnum checkerColorEnum)
     {
-        if (checkerColorEnum == CheckerColorEnum.redChecker)
+        if (checkerColorEnum == CheckerColorEnum.RedChecker)
         {
             return _redCheckers;
         }
