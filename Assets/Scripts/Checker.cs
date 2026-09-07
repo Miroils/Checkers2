@@ -1,19 +1,17 @@
 
 using System;
-//using System.Diagnostics;
-using UnityEngine;
 
 public class Checker
 { 
-    private CheckerColorEnum _checkerColor;
-    private bool _isQueen;
-    private int _verticalPosition;//18 08 спорно?
-    private int _horizontalPosition;//18 08 спорно?
-
     public Action CheckerDestroyedAction;
     public Action CheckerReturnedAction;
     public Action CheckerPromoutedAction;
     public Action CheckerDemoutedAction;
+    private CheckerColorEnum _checkerColor;
+    private bool _isQueen;
+    private int _verticalPosition;
+    private int _horizontalPosition;
+
     public Checker(CheckerColorEnum checkerColor, int verticalPosition, int horizontalPosition)
     {
         _checkerColor = checkerColor;

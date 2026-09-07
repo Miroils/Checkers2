@@ -12,7 +12,6 @@ public class BoardData
     private List<Checker> _redCheckers;
     private List<Checker> _greenCheckers;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public BoardData (int horizontalCells, int verticalCells, int checkersAmount)
     {
         _horizontalCells = horizontalCells;
@@ -21,11 +20,9 @@ public class BoardData
         CellsInit();
         CheckersInit();
     }
-    //03 08 массив из Cells, покраска cells в белый/черный
 
     private void CellsInit()
     {
-        //18 08 объеденить методы?
         _cells = new Cell[_verticalCells, _horizontalCells];
         CreatingBlackWhiteCells();        
     }
@@ -52,8 +49,8 @@ public class BoardData
                 if (_cells[i,j].GetCellColor() == CellColorEnum.BlackCell)
                 {
                     Checker newChecker = new Checker(CheckerColorEnum.GreenChecker, i, j);
-                    _greenCheckers.Add(newChecker);//18 08 повторяемость с red?
-                    _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с red?
+                    _greenCheckers.Add(newChecker);
+                    _cells[i, j].SetCheckerOnCell(newChecker);
                 }
             }
         }
@@ -67,8 +64,8 @@ public class BoardData
                 if (_cells[i, j].GetCellColor() == CellColorEnum.BlackCell)
                 {
                     Checker newChecker = new Checker(CheckerColorEnum.RedChecker, i, j);
-                    _redCheckers.Add(newChecker);//18 08 повторяемость с green?
-                    _cells[i, j].SetCheckerOnCell(newChecker);//18 08 повторяемость с green?
+                    _redCheckers.Add(newChecker);
+                    _cells[i, j].SetCheckerOnCell(newChecker);
                 }
             }
         }

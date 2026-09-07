@@ -1,19 +1,8 @@
-using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MouseManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         Cell2D currentCell = GenerateRayCast();
         if (Input.GetMouseButtonDown(0))
@@ -39,16 +28,15 @@ public class MouseManager : MonoBehaviour
 
     private void RightClick()
     {
-        //19 08 омтеняем выделение
         EventsManager.RightClickEvent?.Invoke();
     }
 
     private Cell2D GenerateRayCast()
     {
-        RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));//Physics2D.Raycast(transform.position, Vector2.right);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
         if (hit)
         {            
-            return hit.collider.gameObject.GetComponent<Cell2D>();//19 08 проверять на комопнент прежде чем его возвращать? но нет объектов которые с колаедром но без Cell2D
+            return hit.collider.gameObject.GetComponent<Cell2D>();
         }
         return null;
     }

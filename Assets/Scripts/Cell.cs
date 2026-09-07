@@ -1,21 +1,16 @@
-using NUnit.Framework;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class Cell 
 {
     private CellColorEnum _cellColor;
     private Checker _checkerOnCell;
-
     private int _verticalPostion;
     private int _horizontalPostion;
-
     private bool _moveable;
     public Action <bool> MoveableChangedAction;
-
     private List<Cell> _cellsForPurify = new List<Cell>();
+
     public void SetCellColor(CellColorEnum newCellColor)
     {
         _cellColor = newCellColor;
@@ -94,7 +89,6 @@ public class Cell
 
     public bool IsMoveable()
     {
-
         return _moveable;
     }
 

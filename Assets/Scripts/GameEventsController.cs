@@ -314,7 +314,7 @@ public class GameEventsController : MonoBehaviour
         _moveCommand = new MoveCommand(_checkerOncell, _chosedCell.GetVerticalPostion(), _chosedCell.GetHorizontalPostion());
         _moveCommand.SetPostionEnd(_currentCell.GetVerticalPostion(), _currentCell.GetHorizontalPostion());
         _moveCommand.SetPurifiedList(GeneratePuryfiedCheckersList());
-        _moveCommand.SetQueenPromoutedState(CheckQueenPromoution());
+        _moveCommand.QueenPromouted = CheckQueenPromoution();
         ClearOldCommandLine();
         _commandBuffer.Add(_moveCommand);
         ExecuteCommand();

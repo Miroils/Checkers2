@@ -5,8 +5,23 @@ using Zenject;
 public class Board : MonoBehaviour
 {
     private BoardData _boardData;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public BoardData GetBoardData()
+    {
+        return _boardData;
+    }
+
+    public void SetBoardData(BoardData boardData)
+    {
+        _boardData = boardData;
+    }
+
+    public Cell GetCellData(int verticalPostion, int horizontalPostion)
+    {
+        return _boardData.GetAnCellParametrs(verticalPostion, horizontalPostion);
+    }
+
+    private void Start()
     {
         EventsManager.ClearingCellEvent.AddListener(ClearingCell);
         EventsManager.SetCheckerOnCellEvent.AddListener(SetCheckerOnCell);
@@ -17,25 +32,8 @@ public class Board : MonoBehaviour
         EventsManager.DestroyCheckerEvent.AddListener(DestroyChecker);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void SetBoardData(BoardData boardData)
-    {
-        _boardData = boardData;
-    }
-
-    public BoardData GetBoardData()
-    {
-        return _boardData;
-    }
-
     private void ClearingCell(int verticalPostion, int horizontalPostion)
     {
-        //21 08 немного перегружено?
         _boardData.ClearCell(verticalPostion, horizontalPostion);
     }
 
@@ -46,14 +44,8 @@ public class Board : MonoBehaviour
 
     private void TransitChecker(Checker checker)
     {
-        //21 08 немного перегружено?
         _boardData.SetCheckerOnCell(checker);    
         EventsManager.AnimateCheckerTranstionEvent?.Invoke(checker);
-    }
-
-    public Cell GetCellData(int verticalPostion, int horizontalPostion)
-    {
-        return _boardData.GetAnCellParametrs(verticalPostion, horizontalPostion);
     }
 
     private void ResetAllCellMoveable()

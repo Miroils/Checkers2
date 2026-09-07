@@ -1,19 +1,14 @@
-using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
 
 public class MoveCommand : ICommand
 {
-    //previous position?
-    //восстанавление срубленных?
-    //откат промушена?
+    public bool QueenPromouted { get; set; } = false;
     private Checker _checker;
     private int _verticalPostionStart;
     private int _horizontalPositionStart;
     private int _verticalPostionEnd;
     private int _horizontalPositionEnd;
     private List<Checker> _purifedCheckersList;
-    private bool _queenPromouted;
     public void Execute()
     {
         _checker.MoveToNewPosition(_verticalPostionEnd, _horizontalPositionEnd);
@@ -28,7 +23,7 @@ public class MoveCommand : ICommand
         CheckNoQueenState();
     }
 
-    public MoveCommand(Checker checker, int verticalPostion, int horizontalPosition)//добавить килинг чекер? добавить промотион?
+    public MoveCommand(Checker checker, int verticalPostion, int horizontalPosition)
     {
         _checker = checker;
         _verticalPostionStart = verticalPostion;
@@ -44,11 +39,6 @@ public class MoveCommand : ICommand
     public void SetPurifiedList(List <Checker> checkersList)
     {        
         _purifedCheckersList = checkersList;
-    }
-
-    public void SetQueenPromoutedState(bool queenPromouted)
-    {
-        _queenPromouted = queenPromouted;
     }
 
     private void RestoreFromPurifedCheckers()
@@ -71,17 +61,15 @@ public class MoveCommand : ICommand
 
     private void CheckNoQueenState()
     {
-        //03 09 сбрасывать статус королевы
-        if (_queenPromouted)
+        if (QueenPromouted)
         {
-            //05 09 нужно понизить
             _checker.Demoute();
         }
     }
 
     private void CheckQueenState()
     {
-        if (_queenPromouted)
+        if (QueenPromouted)
         {
             _checker.PromouteToQueen();
         }
